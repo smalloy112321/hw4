@@ -18,11 +18,12 @@ from collections import defaultdict, deque
 # --- Password hashing -------------------------------------------------------------------
 
 ALGORITHM = "pbkdf2_sha256"
-# OWASP's current recommendation for PBKDF2-HMAC-SHA256. Each guess costs an attacker
-# the same 600,000 rounds, which makes bulk guessing against a stolen database very slow.
-ITERATIONS = 600_000
-# The seeded accounts were hashed as "pbkdf2_sha256$<salt>$<hex>" with 120,000 rounds.
-LEGACY_ITERATIONS = 120_000
+# Assignment spec (Problem 4): PBKDF2-HMAC-SHA256, 120,000 iterations, stored as
+# "pbkdf2_sha256$<salt>$<hex digest>". Signup and login use these identical settings, which also
+# match the seeded accounts. Each guess against a stolen database costs 120,000 rounds.
+ITERATIONS = 120_000
+# Accounts created during development used "pbkdf2_sha256$600000$<salt>$<hex>"; still verifiable.
+EXTENDED_FORMAT_PARTS = 4
 
 
 def _pbkdf2(password: str, salt: str, iterations: int) -> str:
@@ -30,20 +31,20 @@ def _pbkdf2(password: str, salt: str, iterations: int) -> str:
 
 
 def hash_password(password: str) -> str:
-    """Return "pbkdf2_sha256$<iterations>$<salt>$<hex digest>" with a fresh random salt."""
-    salt = secrets.token_hex(16)
-    return f"{ALGORITHM}${ITERATIONS}${salt}${_pbkdf2(password, salt, ITERATIONS)}"
+    """Return "pbkdf2_sha256$<salt>$<hex digest>" with a fresh random 16-character salt."""
+    salt = secrets.token_hex(8)
+    return f"{ALGORITHM}${salt}${_pbkdf2(password, salt, ITERATIONS)}"
 
 
 def verify_password(password: str, stored: str) -> bool:
-    """Check a password against a stored hash in either the current or the legacy format."""
+    """Read the salt from the stored string, hash the typed password with it, compare in constant time."""
     parts = stored.split("$")
-    if len(parts) == 4 and parts[0] == ALGORITHM and parts[1].isdigit():
+    if len(parts) == 3 and parts[0] == ALGORITHM:
+        _, salt, expected = parts
+        rounds = ITERATIONS
+    elif len(parts) == EXTENDED_FORMAT_PARTS and parts[0] == ALGORITHM and parts[1].isdigit():
         _, iterations, salt, expected = parts
         rounds = int(iterations)
-    elif len(parts) == 3 and parts[0] == ALGORITHM:
-        _, salt, expected = parts
-        rounds = LEGACY_ITERATIONS
     else:
         return False
     # Constant-time comparison so response timing does not leak how close a guess was.

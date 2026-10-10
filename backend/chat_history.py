@@ -148,10 +148,11 @@ def recently_discussed(user_id: int, limit: int = 5) -> list[ProductSuggestion]:
     return [ProductSuggestion(product_id=c.product_id, name=c.name) for c in cards]
 
 
-def customer_for(user_id: int, first_name: str, last_name: str | None, created_at: str) -> Customer:
+def customer_for(user_id: int, first_name: str, last_name: str | None, email: str, created_at: str) -> Customer:
     return Customer(
         first_name=first_name,
         last_name=last_name,
+        email=email,
         member_since=created_at[:10],
         past_messages=message_count(user_id),
     )

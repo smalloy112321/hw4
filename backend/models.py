@@ -80,6 +80,17 @@ class ProductSuggestion(BaseModel):
     name: str
 
 
+class Alternatives(BaseModel):
+    """Similar items that are in stock in the shopper's size (suggest_alternatives)."""
+
+    for_product: ProductSuggestion = Field(description="The item the shopper wanted.")
+    size: str = Field(description="The size they need, as a catalogue code (XS-XXL).")
+    original_has_size: bool = Field(description="True if the original item actually has this size in stock.")
+    alternatives: list[ProductMatch] = Field(
+        description="Up to 4 other items with this size in stock, most similar first (same category, then same color, then closest price)."
+    )
+
+
 class LookupMiss(BaseModel):
     """Returned instead of a result when no single product matches what was asked for."""
 
@@ -162,10 +173,11 @@ class ChatRequest(BaseModel):
 
 
 class Customer(BaseModel):
-    """The logged-in shopper, as the agent sees them. No email, password hash, or other private fields."""
+    """The logged-in shopper, as the agent sees them. Never the password hash or anyone else's data."""
 
     first_name: str
     last_name: str | None = None
+    email: str = Field(description="The shopper's own login email; may be confirmed back to them, never shared.")
     member_since: str = Field(description="Date the account was created, YYYY-MM-DD.")
     past_messages: int = Field(description="How many chat messages they've sent before this one.")
 
@@ -185,6 +197,7 @@ class CustomerProfile(BaseModel):
     logged_in: bool
     first_name: str | None = None
     last_name: str | None = None
+    email: str | None = None
     member_since: str | None = None
     past_messages: int = 0
     recently_discussed: list[ProductSuggestion] = Field(

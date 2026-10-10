@@ -42,6 +42,8 @@ A log of the prompts I typed into the vibe coder, with one section for each prob
 
 **Result:** `output/harness.md` lists all four tables (`catalogue`, `inventory`, `users`, `chat_messages`) with every field, its type, and my one-line reason why it matters.
 
+**Later follow-up (grading review):** Three of my catalogue lines (description, colors, price) said what the field is but not why it matters, so they were sharpened to say how the shop and chatbot use them.
+
 ---
 
 ## Problem 3 — Scaffold the React + Vite + TypeScript front end and a product API
@@ -113,7 +115,12 @@ A log of the prompts I typed into the vibe coder, with one section for each prob
 >
 > Update output/harness.md with how the authorization works, including what you store for a user and how you are protecting all user passwords
 
-**Follow-up:** _None yet._
+**Follow-up prompts (grading review at the end of the homework):**
+> Now I want you to compare that Zip to my homework. Please note that each Problem is on two panels (panel A and panel B). Please let me know how you'd grade my work against the assignment: https://zlisto.github.io/mgt_409_fa26/hw4/p1.html
+
+> Yes, let's make these fixes
+
+**What was lacking after the first prompt:** My prompt asked for secure passwords but didn't give the exact hashing settings, so new accounts used 600,000 rounds and a different stored format. The assignment specifies PBKDF2-HMAC-SHA256 with 120,000 iterations stored as `pbkdf2_sha256$salt$hash`, identical for signup and login, so we switched to that.
 
 ---
 
@@ -133,7 +140,7 @@ A log of the prompts I typed into the vibe coder, with one section for each prob
 > Make sure the backend runs from the backend/ folder like this:
 > uvicorn main:app --reload --port 8000
 
-**Follow-up:** _None yet._
+**Follow-up:** None needed. The first prompt covered what this problem asked for.
 
 ---
 
@@ -148,7 +155,7 @@ A log of the prompts I typed into the vibe coder, with one section for each prob
 >
 > In output/harness.md, list each tool and explain which model fields you choise for lookup results and why.
 
-**Follow-up:** _None yet._
+**Follow-up:** None needed. The first prompt covered what this problem asked for.
 
 ---
 
@@ -163,7 +170,7 @@ A log of the prompts I typed into the vibe coder, with one section for each prob
 >
 > update prompts/prompts.md and output/harness.md so it's clear how search results reach the page.
 
-**Follow-up:** _None yet._
+**Follow-up:** None needed. The first prompt covered what this problem asked for.
 
 ---
 
@@ -178,7 +185,12 @@ A log of the prompts I typed into the vibe coder, with one section for each prob
 >
 > Document this in output/harness.md: how user chat history is stored, what customer fields the agent can see, and how page context is passed.
 
-**Follow-up:** _None yet._
+**Follow-up prompts (grading review at the end of the homework):**
+> Now I want you to compare that Zip to my homework. Please note that each Problem is on two panels (panel A and panel B). Please let me know how you'd grade my work against the assignment: https://zlisto.github.io/mgt_409_fa26/hw4/p1.html
+
+> Yes, let's make these fixes
+
+**What was lacking after the first prompt:** I didn't say which customer fields the agent should know, so it got the name but not the email. The assignment says the agent should know the shopper's name and email, so the shopper's own email was added, with a rule that it's only ever confirmed to that shopper.
 
 ---
 
@@ -199,7 +211,12 @@ A log of the prompts I typed into the vibe coder, with one section for each prob
 >
 > Write output/usability.md before or as you build. For each improvement, say what was added and why it helps a campus customs shopper or the business. Make sure all improvements actually show up in the running app because graders will read the write-up and look for the features.
 
-**Follow-up:** _None yet._
+**Follow-up prompts (grading review at the end of the homework):**
+> Now I want you to compare that Zip to my homework. Please note that each Problem is on two panels (panel A and panel B). Please let me know how you'd grade my work against the assignment: https://zlisto.github.io/mgt_409_fa26/hw4/p1.html
+
+> Yes, let's make these fixes
+
+**What was lacking after the first prompt:** My second "back-end" improvement (the Handsome Dan avatar) was really a front-end visual. The assignment asks for 2 agent/backend improvements that make the agent's answers better or more accurate, so we added a new agent tool, `suggest_alternatives`, that offers similar in-stock items when a shopper's size is sold out, and documented it in `output/usability.md`.
 
 ---
 
@@ -208,7 +225,9 @@ A log of the prompts I typed into the vibe coder, with one section for each prob
 **Prompt:**
 > Let's move on to Problem 10. We are supposed to add creative design so the site feels like a real storefront but we already did this earlier when we made changes to the homepage and product pages. can you help me write output/design.md describing everything we've changed and why it helps customers stick around and buy.
 
-**Follow-up:** _None yet._
+**Follow-up:** None needed at the time.
+
+**Later follow-up (grading review):** The assignment asks for `design.md` to be "concrete and short", so a one-table "At a glance" summary was added at the top.
 
 ---
 
@@ -228,7 +247,7 @@ A log of the prompts I typed into the vibe coder, with one section for each prob
 
 ---
 
-## Final — Audit trail, safety rules, and completing harness.md
+## Problem 12 — Audit trail, safety rules, and completing harness.md
 
 **Prompt:**
 > Keep an append-only output/audit_trail.json of agent loop activity (time, tool name, short args/results, stop reason). Do not wipe between runs.
@@ -243,7 +262,7 @@ A log of the prompts I typed into the vibe coder, with one section for each prob
 >
 > Finish out/harness.md so it is clear how the system works. Model fields in models.py and why we chose them, tools and abilities, safety rules, and specs including loop limits, result caps, models, and how to run front and back
 
-**Follow-up:** _None yet._
+**Follow-up:** None needed. The first prompt covered what this problem asked for.
 
 ---
 
@@ -261,5 +280,7 @@ A log of the prompts I typed into the vibe coder, with one section for each prob
 **Follow-up (answers to the vibe coder's questions before publishing):** I chose to keep the agent file names `prompts/prompt.md` and `agent.py` (as specified in Problem 5), to name the public repo `hw4`, and to include the game-day crowd photo and the audit trail as-is.
 
 **What was lacking after the first prompt:** The file names in this prompt differed from the ones in Problem 5, and the repo name and a couple of borderline public files weren't specified, so those needed a decision before anything was published.
+
+**Later follow-up (grading review):** The assignment's expected layout puts `requirements.txt` at the `hw4/` root, so it was moved there from `backend/`, and the README was updated.
 
 ---

@@ -34,7 +34,7 @@ From the `hw4` folder:
 ```bash
 # Python environment for the back end (kept outside backend/ so uvicorn --reload ignores it)
 python3 -m venv .venv
-.venv/bin/pip install -r backend/requirements.txt
+.venv/bin/pip install -r requirements.txt
 
 # Secrets: copy the example, then fill in PORTKEY_API_KEY and SESSION_SECRET
 cp .env.example .env
@@ -103,6 +103,7 @@ If anything is still listed, stop it with `kill <pid>`.
 hw4/
   README.md                 this file
   AI_prompts.md             prompt log, one section per problem
+  requirements.txt          Python packages for the back end (and the tile script)
   .env.example              variable names with placeholders only (copy to .env)
   data/README.md            where the data pack goes (the pack itself is git-ignored)
   scripts/
@@ -115,7 +116,6 @@ hw4/
     tools.py                │ the agent (four files)
     models.py               │
     prompts/prompt.md       ┘
-    requirements.txt
   frontend/                 React + Vite + TypeScript
     src/pages/              Home, Products, ProductPage (PDP), About, Login, CreateAccount, NotFound
     src/components/         NavBar, Logo, ProductCard, ChatWidget, ChatResultsPanel, HandsomeDan, …
@@ -135,7 +135,7 @@ hw4/
 |---|---|
 | `prompts/prompt.md` | System prompt: Handsome Dan's voice, honesty rules for price and stock, page and customer context, and safety rules. |
 | `agent.py` | Builds the Portkey-routed model (`gpt-6-astra`), the agent, its deps (who's chatting and which page they're on), loop limits, and the audit trail. |
-| `tools.py` | Read-only database tools: `search_products`, `get_product_info`, `check_stock` (plus `get_shopper_profile`, registered in `agent.py`). |
+| `tools.py` | Read-only database tools: `search_products`, `get_product_info`, `check_stock`, `suggest_alternatives` (plus `get_shopper_profile`, registered in `agent.py`). |
 | `models.py` | Pydantic types for tool results, the agent's structured output, the chat API, and audit entries. |
 
 See `output/harness.md` for the full reference: architecture, specs and limits, every model field and why it was chosen, tools, safety rules, and the audit trail.
@@ -150,7 +150,7 @@ See `output/harness.md` for the full reference: architecture, specs and limits, 
 ## Security notes
 
 - Secrets come only from `.env`, which is git-ignored. `.env.example` holds placeholders.
-- Passwords are stored only as salted PBKDF2-SHA256 hashes (600,000 rounds).
+- Passwords are stored only as salted PBKDF2-HMAC-SHA256 hashes (120,000 rounds, `pbkdf2_sha256$salt$hash`, as the assignment specifies).
 - Sessions use a signed, HttpOnly, SameSite=Lax cookie.
 - Login is locked after 5 failed attempts in 15 minutes.
-- The agent's tools open the database read-only, and the agent only ever sees the current shopper's first and last name, join date, and chat. It never sees emails or password hashes.
+- The agent's tools open the database read-only. The agent sees only the current shopper's name, own email, join date, and chat, never password hashes or other customers' data.

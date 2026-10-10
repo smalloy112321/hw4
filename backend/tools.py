@@ -11,6 +11,7 @@ import sqlite3
 from pathlib import Path
 
 from models import (
+    Alternatives,
     LookupMiss,
     ProductCard,
     ProductInfo,
@@ -294,6 +295,36 @@ def short_description(text: str, limit: int = 120) -> str:
     if len(first) <= limit:
         return first
     return first[: first.rfind(" ", 0, limit)].rstrip(",;") + "…"
+
+
+def suggest_alternatives(product: str, size: str, limit: int = 4) -> Alternatives | LookupMiss:
+    """Other items with `size` in stock, ranked by how similar they are to `product`.
+
+    Similarity: same shopper category (e.g. Hoodies) first, then same main garment color, then
+    the closest price. Every alternative is checked against the inventory table for that size.
+    """
+    pid = resolve_product(product)
+    if isinstance(pid, LookupMiss):
+        return pid
+    wanted = normalize_size(size)
+    items = _load_catalogue()
+    base = next(i for i in items if i["product_id"] == pid)
+    base_category = category_of(base["garment_type"])
+    base_color = color_family(base["colors"])
+
+    def rank(item: dict) -> tuple:
+        same_category = category_of(item["garment_type"]) == base_category
+        same_color = base_color is not None and color_family(item["colors"]) == base_color
+        return (not same_category, not same_color, abs(item["price"] - base["price"]), item["name"])
+
+    candidates = [i for i in items if i["product_id"] != pid and i["stock"].get(wanted, 0) > 0]
+    candidates.sort(key=rank)
+    return Alternatives(
+        for_product=ProductSuggestion(product_id=pid, name=base["name"]),
+        size=wanted,
+        original_has_size=base["stock"].get(wanted, 0) > 0,
+        alternatives=[_to_match(i) for i in candidates[: max(1, min(limit, 8))]],
+    )
 
 
 def product_cards(product_ids: list[str]) -> list[ProductCard]:

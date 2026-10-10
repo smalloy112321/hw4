@@ -38,6 +38,7 @@ import chat_history  # noqa: E402
 import tools  # noqa: E402
 from models import (  # noqa: E402
     AgentReply,
+    Alternatives,
     AuditEntry,
     ChatResponse,
     ChatResults,
@@ -90,8 +91,8 @@ def get_model() -> OpenAIResponsesModel:
 class ChatDeps:
     """Who is chatting and where they are. Built by main.py for every message.
 
-    user_id stays in code (tools use it to look things up); the model only ever sees the
-    Customer fields and the checked PageView.
+    user_id stays in code (tools use it to look things up); the model sees the Customer fields
+    (name, email, member since, chat count) and the checked PageView.
     """
 
     user_id: int | None = None
@@ -124,7 +125,8 @@ def shopper_context(ctx: RunContext[ChatDeps]) -> str:
         else "This is their first chat with us."
     )
     return (
-        f"Shopper: logged in as {c.first_name}, a Campus Customs member since {c.member_since}. {returning} "
+        f"Shopper: logged in as {c.first_name} {c.last_name or ''}".rstrip()
+        + f" (account email: {c.email}), a Campus Customs member since {c.member_since}. {returning} "
         "Their chat is saved, so earlier messages in this conversation may be from a previous visit."
     )
 
@@ -148,7 +150,7 @@ def page_context(ctx: RunContext[ChatDeps]) -> str:
 
 @agent.tool
 def get_shopper_profile(ctx: RunContext[ChatDeps]) -> CustomerProfile:
-    """Who is chatting: first name, member-since date, and products shown to them in earlier chats.
+    """Who is chatting: name, email, member-since date, and products shown to them in earlier chats.
 
     Call this when the shopper refers to an earlier visit ("the hoodie you showed me last time")
     or asks what we know about them. Returns logged_in=false for guests.
@@ -160,6 +162,7 @@ def get_shopper_profile(ctx: RunContext[ChatDeps]) -> CustomerProfile:
         logged_in=True,
         first_name=c.first_name,
         last_name=c.last_name,
+        email=c.email,
         member_since=c.member_since,
         past_messages=c.past_messages,
         recently_discussed=chat_history.recently_discussed(ctx.deps.user_id),
@@ -214,6 +217,21 @@ def check_stock(product: str, size: str | None = None) -> StockReport | LookupMi
         size: The size asked about, e.g. "S", "XL", "medium", "extra large". Omit for all sizes.
     """
     return tools.check_stock(product, size)
+
+
+@agent.tool_plain
+def suggest_alternatives(product: str, size: str) -> Alternatives | LookupMiss:
+    """Find similar items that ARE in stock in the shopper's size, when their pick is sold out in it.
+
+    Call this right after check_stock reports sold_out (or not_offered) for the size the shopper
+    wants. Returns up to 4 alternatives, most similar first (same category, same color, closest
+    price), each verified in stock in that size.
+
+    Args:
+        product: The product_id (best) or name of the item they wanted.
+        size: The size they need, e.g. "L", "large", "XL".
+    """
+    return tools.suggest_alternatives(product, size)
 
 
 def _history(turns: list[ChatTurn]) -> list[ModelMessage]:
@@ -325,6 +343,9 @@ def _summarize(content: object) -> str:
         sizes = " ".join(f"{s.size}={s.units}" for s in content.sizes)
         asked = f"; asked {content.requested_size} -> {content.requested_size_status}" if content.requested_size else ""
         return f"{content.product_id}: {sizes}{asked}"
+    if isinstance(content, Alternatives):
+        alts = ", ".join(f"{a.product_id} ${a.price:.0f}" for a in content.alternatives)
+        return f"{content.for_product.product_id} has {content.size}: {content.original_has_size}; alternatives: {alts}"
     if isinstance(content, LookupMiss):
         return f"miss '{content.query}': {[s.product_id for s in content.suggestions]}"
     if isinstance(content, CustomerProfile):

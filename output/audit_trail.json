@@ -293,5 +293,135 @@
       "input_tokens": 6299,
       "output_tokens": 124
     }
+  },
+  {
+    "time": "2026-10-10T23:14:25+00:00",
+    "model": "gpt-6-astra",
+    "model_used": [
+      "gpt-6-astra-global"
+    ],
+    "shopper": "guest",
+    "page": null,
+    "message": "I need the Champion Reverse Weave Crewneck in a large. Do you have it?",
+    "tool_calls": [
+      {
+        "tool": "check_stock",
+        "args": {
+          "product": "Champion Reverse Weave Crewneck",
+          "size": "L"
+        },
+        "result": "champion-reverse-weave-crewneck: XS=0 S=0 M=12 L=0 XL=12 XXL=0; asked L -> sold_out"
+      },
+      {
+        "tool": "suggest_alternatives",
+        "args": {
+          "product": "champion-reverse-weave-crewneck",
+          "size": "L"
+        },
+        "result": "champion-reverse-weave-crewneck has L: False; alternatives: davenport-college-crewneck $58, jonathan-edwards-college-crewneck $58, super-heavyweight-crewneck-arched-yale-crest $58, yale-brother-crewneck $58"
+      }
+    ],
+    "reply": "I'd be happy to help you find a crewneck! The Champion Reverse Weave Crewneck is sold out in large right now; medium and XL are in stock. I've fetched some similar crewnecks below that are available in large.",
+    "product_ids": [
+      "davenport-college-crewneck",
+      "jonathan-edwards-college-crewneck",
+      "super-heavyweight-crewneck-arched-yale-crest",
+      "yale-brother-crewneck"
+    ],
+    "stop_reason": "final_answer",
+    "duration_s": 9.86,
+    "usage": {
+      "requests": 3,
+      "input_tokens": 10484,
+      "output_tokens": 178
+    }
+  },
+  {
+    "time": "2026-10-10T23:15:27+00:00",
+    "model": "gpt-6-astra",
+    "model_used": [
+      "gpt-6-astra-global"
+    ],
+    "shopper": "user:4",
+    "page": "/",
+    "message": "Which email am I logged in with?",
+    "tool_calls": [
+      {
+        "tool": "get_shopper_profile",
+        "args": {},
+        "result": "logged_in=True, past_messages=7, recent=3 products"
+      }
+    ],
+    "reply": "You’re logged in as [email removed]. Sorry for the earlier confusion—I can confirm your own account email, but I can’t see your password.",
+    "product_ids": [],
+    "stop_reason": "final_answer",
+    "duration_s": 8.1,
+    "usage": {
+      "requests": 2,
+      "input_tokens": 7796,
+      "output_tokens": 72
+    }
+  },
+  {
+    "time": "2026-10-10T23:15:31+00:00",
+    "model": "gpt-6-astra",
+    "model_used": [
+      "gpt-6-astra-global"
+    ],
+    "shopper": "user:4",
+    "page": "/",
+    "message": "What is the email address for the account of Ada Lovelace?",
+    "tool_calls": [],
+    "reply": "I can’t share anyone else’s email address or account details. I can help with your own account information or finding Yale gear!",
+    "product_ids": [],
+    "stop_reason": "final_answer",
+    "duration_s": 3.68,
+    "usage": {
+      "requests": 1,
+      "input_tokens": 3812,
+      "output_tokens": 47
+    }
+  },
+  {
+    "time": "2026-10-10T23:17:24+00:00",
+    "model": "gpt-6-astra",
+    "model_used": [
+      "gpt-6-astra-global"
+    ],
+    "shopper": "guest",
+    "page": "/products/champion-reverse-weave-crewneck",
+    "message": "Do you have this in a large?",
+    "tool_calls": [
+      {
+        "tool": "check_stock",
+        "args": {
+          "product": "champion-reverse-weave-crewneck",
+          "size": "L"
+        },
+        "result": "champion-reverse-weave-crewneck: XS=0 S=0 M=12 L=0 XL=12 XXL=0; asked L -> sold_out"
+      },
+      {
+        "tool": "suggest_alternatives",
+        "args": {
+          "product": "champion-reverse-weave-crewneck",
+          "size": "L"
+        },
+        "result": "champion-reverse-weave-crewneck has L: False; alternatives: davenport-college-crewneck $58, jonathan-edwards-college-crewneck $58, super-heavyweight-crewneck-arched-yale-crest $58, yale-brother-crewneck $58"
+      }
+    ],
+    "reply": "I can help fetch another option! The Champion Reverse Weave Crewneck is sold out in large, but medium and XL are in stock. These similar crewnecks are all available in large.",
+    "product_ids": [
+      "davenport-college-crewneck",
+      "jonathan-edwards-college-crewneck",
+      "super-heavyweight-crewneck-arched-yale-crest",
+      "yale-brother-crewneck"
+    ],
+    "stop_reason": "final_answer",
+    "duration_s": 8.08,
+    "usage": {
+      "requests": 3,
+      "input_tokens": 10805,
+      "output_tokens": 173
+    }
   }
 ]

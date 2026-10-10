@@ -306,7 +306,7 @@ async def chat(body: ChatRequest, cc_session: str | None = Cookie(default=None))
     if user:
         history = chat_history.recent_turns(user.id, MAX_HISTORY_TURNS)
         customer = chat_history.customer_for(
-            user.id, user.first_name or user.name.split(" ")[0], user.last_name, user.created_at
+            user.id, user.first_name or user.name.split(" ")[0], user.last_name, user.email, user.created_at
         )
         deps = ChatDeps(user_id=user.id, customer=customer, page=page_view(body.page))
     else:

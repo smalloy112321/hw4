@@ -2,6 +2,21 @@
 
 The goal was a site that feels like a real Yale shop in New Haven, not a class demo: something a parent, student, or alum trusts enough to browse and buy from. Most of the design work happened while building Problems 3 and 9. This file collects every design choice in one place, explains why each one helps shoppers stay and buy, and says where to see it in the running app (http://127.0.0.1:5173).
 
+## At a glance (the short version)
+
+| Area | What we changed | Why it helps shoppers stay and buy |
+|---|---|---|
+| **Brand** | Vintage felt-pennant logo with "EST. 1975", centered on a cream band; "OFFICIAL YALE GEAR FOR THE WHOLE FAMILY" strip | Instant heritage and trust; says "official" and "for everyone" before any scrolling |
+| **Fonts and color** | Cormorant Garamond headlines, Lato body, spaced capitals for nav and buttons; Yale blue, navy, and cream only | Feels premium and Ivy League but stays easy to read; product photos and ADD TO CART stand out |
+| **Home** | Game-day crowd photo hero, one-line headline, two buttons; photo tiles for 4 collections; clutter removed | Sells the feeling of being part of the crowd, then gives one obvious next click |
+| **Navigation** | Sticky slim nav, Products ▾ dropdown, plain Create Account, "Hi, Eli" when logged in | Always one click from shopping; feels personal for returning customers |
+| **Browsing** | Uniform cards, color, size, and price filters with counts, friendly empty states | Shoppers reach "in my size, in my budget" fast and never hit a dead end |
+| **Product page** | Big photo; Name → Sizes → Price → ADD TO CART → Description; sold-out sizes crossed out; "Only 2 left" | Answers "can I get it?" first; honest urgency; one clear call to action |
+| **Chat** | Handsome Dan mascot avatar and voice; chat results become cards on the page; saved chats | A friendly helper that shows the merchandise turns questions into sales and gives people a reason to come back |
+| **Motion and polish** | Cards lift on hover, Dan's tail-wag wiggle (off for reduced-motion users), typing dots, phone layouts, accessible focus outlines | Feels alive and finished on every device, which builds trust |
+
+The sections below give the details and where to see each change in the running app.
+
 ## The design idea in one line
 
 **Vintage Ivy spirit, modern store.** Heritage cues (a felt pennant, "EST. 1975", Garamond headlines, Yale blue and cream) make the brand feel official and established. Modern store patterns (big photos, clear prices, filters, a sticky nav, a helpful chat) make it easy to buy.
