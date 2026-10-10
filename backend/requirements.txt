@@ -1,0 +1,6 @@
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+python-dotenv>=1.0.1
+pydantic-ai-slim[openai]>=1.0.0
+# Only for scripts/build_collection_tiles.py (Home-page tiles from the data pack).
+pillow>=10.0
